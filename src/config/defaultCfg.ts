@@ -11,6 +11,8 @@ const initialShapes = {
       fill: 'blue',
       id: '123',
       name: 'Какой-то квадрат',
+      contextMenu: true,
+      menuType: 'rectangle',
     },
     {
       type: 'circle',
@@ -20,6 +22,8 @@ const initialShapes = {
       fill: 'red',
       id: '1235',
       name: 'Какой-то квадрат',
+      contextMenu: true,
+      menuType: 'circle',
     },
     {
       type: 'text',
@@ -34,81 +38,51 @@ const initialShapes = {
   ],
 };
 
-// Контекстное меню для объектов с настройками
-const settingsMenu = new ContextMenu([
-  {
-    label: 'Настройка 1',
-    action: (id, canvas) => {
-      console.debug(
-        'Я бы ещё здесь хотел кое-что сделать, надо искать этот элемент в рамках канвас контейнера, потому что одинаковые элементы могут быть в разных канваса (я имею в виду id)',
-        canvas,
-      );
-      console.debug(`Выбрана настройка 1 для объекта ID: ${id}`);
+const menus = {
+  rectangle: new ContextMenu([
+    {
+      label: 'Настройка 1',
+      action: (id, canvas) => {
+        console.log(`Настройка 1 для ID: ${id} в канвасе ${canvas}`);
+      },
     },
-  },
-  {
-    label: 'Настройка 2',
-    action: (id, canvas) => {
-      console.debug(
-        'Я бы ещё здесь хотел кое-что сделать, надо искать этот элемент в рамках канвас контейнера, потому что одинаковые элементы могут быть в разных канваса (я имею в виду id)',
-        canvas,
-      );
-      console.debug(`Выбрана настройка 2 для объекта ID: ${id}`);
+    {
+      label: 'Удалить',
+      action: (id, canvas) => {
+        const obj = canvas.getObjects().find((o) => o.id === id);
+        if (obj) {
+          canvas.remove(obj);
+          canvas.renderAll();
+        }
+      },
     },
-  },
-]);
+  ]),
+  circle: new ContextMenu([
+    {
+      label: 'Изменить цвет',
+      action: (id, canvas) => {
+        const obj = canvas.getObjects().find((o) => o.id === id);
+        if (obj) {
+          obj.set('fill', 'blue'); // пример изменения цвета
+          canvas.renderAll();
+        }
+      },
+      closeOnClick: false,
+    },
+  ]),
+  group: new ContextMenu([
+    {
+      label: 'Групповые действия',
+      action: (ids, canvas) => {
+        if (!Array.isArray(ids)) {
+          ids = [ids];
+        }
+        ids.forEach((id) => {
+          console.log(`Групповое действие для ID: ${id}`);
+        });
+      },
+    },
+  ]),
+};
 
-// Контекстное меню для объектов, которые нельзя редактировать
-const readOnlyMenu = new ContextMenu([
-  {
-    label: 'Показать информацию',
-    action: (id, canvas) => {
-      console.debug(
-        'Я бы ещё здесь хотел кое-что сделать, надо искать этот элемент в рамках канвас контейнера, потому что одинаковые элементы могут быть в разных канваса (я имею в виду id)',
-        canvas,
-      );
-      console.debug(`Показать информацию для объекта ID: ${id}`);
-    },
-  },
-]);
-
-// Контекстное меню для объектов, имеющих специальные действия
-const specialMenu = new ContextMenu([
-  {
-    label: 'Специальное действие',
-    action: (id, canvas) => {
-      console.debug(
-        'Я бы ещё здесь хотел кое-что сделать, надо искать этот элемент в рамках канвас контейнера, потому что одинаковые элементы могут быть в разных канваса (я имею в виду id)',
-        canvas,
-      );
-      console.debug(`Выполнено специальное действие для объекта ID: ${id}`);
-    },
-  },
-]);
-
-const alignMenu = new ContextMenu([
-  {
-    label: 'Align Left',
-    action: (id, canvas) => {
-      const object = canvas.getObjects().find((obj) => obj.id === id);
-      if (object) {
-        object.set('left', 0);
-        canvas.renderAll();
-      }
-    },
-    closeOnClick: false, // Меню останется открытым
-  },
-  {
-    label: 'Delete',
-    action: (id, canvas) => {
-      const object = canvas.getObjects().find((obj) => obj.id === id);
-      if (object) {
-        canvas.remove(object);
-        canvas.renderAll();
-      }
-    },
-    closeOnClick: true, // Меню закроется после клика
-  },
-]);
-
-export { initialShapes, settingsMenu, readOnlyMenu, specialMenu, alignMenu };
+export { initialShapes, menus };

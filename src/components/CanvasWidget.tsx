@@ -11,11 +11,11 @@ export const CanvasWidget: React.FC = () => {
   const slideRef2 = useRef<SlideCanvasHandle | null>(null);
 
   const handleRenderShapes = () => {
-    slideRef1.current?.loadFromJSON(JSON.stringify(initialShapes));
+    slideRef1.current?.instance?.loadFromJSON(JSON.stringify(initialShapes));
   };
 
   const getCanvasConfig = () => {
-    console.log(slideRef1.current?.getCanvasConfig());
+    console.debug('Canvas Instance JSON:', slideRef1.current?.instance?.toJSON());
   };
 
   return (
@@ -25,7 +25,7 @@ export const CanvasWidget: React.FC = () => {
         canvasId="slide-1"
         ref={slideRef1}
         onRegister={(id, instance, element) => {
-          slideRef1.current?.setCanvasDimensions({ width: 1500, height: 500 });
+          slideRef1.current?.instance?.setDimensions({ width: 1500, height: 500 });
           instanceManager.registerInstance(id, instance, element);
           handleRenderShapes();
         }}
@@ -42,10 +42,10 @@ export const CanvasWidget: React.FC = () => {
         onDestroy={(id) => instanceManager.destroyInstance(id)}
       /> */}
       <div style={{ position: 'fixed', right: 0, display: 'flex', flexDirection: 'column' }}>
-        <button onClick={() => slideRef1.current?.renderCanvas()}>Render Slide 1</button>
-        <button onClick={() => slideRef1.current?.clearCanvas()}>Clear Slide 1</button>
+        <button onClick={() => slideRef1.current?.instance?.renderAll()}>Render Slide 1</button>
+        <button onClick={() => slideRef1.current?.instance?.clear()}>Clear Slide 1</button>
         <button onClick={getCanvasConfig}>Get Config</button>
-        <button onClick={() => slideRef2.current?.clearCanvas()}>Clear Slide 2</button>
+        <button onClick={() => slideRef2.current?.instance?.clear()}>Clear Slide 2</button>
       </div>
     </div>
   );

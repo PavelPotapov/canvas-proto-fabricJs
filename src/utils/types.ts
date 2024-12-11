@@ -1,9 +1,12 @@
+import { Canvas } from 'fabric';
+
 export interface SlideCanvasHandle {
-  renderCanvas: () => void;
-  clearCanvas: () => void;
-  loadFromJSON: (jsonCfg: string) => void;
-  setCanvasDimensions: ({ width, height }: BoxSize) => void;
-  getCanvasConfig: () => string | null;
+  renderCanvas?: () => void;
+  clearCanvas?: () => void;
+  loadFromJSON?: (jsonCfg: string) => void;
+  setCanvasDimensions?: ({ width, height }: BoxSize) => void;
+  getCanvasConfig?: () => string | null;
+  instance: Canvas | null;
 }
 
 export interface BoxSize {
@@ -11,4 +14,4 @@ export interface BoxSize {
   height: number;
 }
 
-export type MenuType = 'settings' | 'readOnly' | 'edit' | 'delete' | 'align';
+export type MenuType = 'rectangle' | 'circle' | 'group';
