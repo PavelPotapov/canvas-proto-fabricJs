@@ -78,9 +78,26 @@ const menus = {
           ids = [ids];
         }
         ids.forEach((id) => {
-          console.log(`Групповое действие для ID: ${id}`);
+          console.log(`Групповое действие для ID: ${id} для канваса ${canvas}`);
         });
       },
+    },
+    {
+      label: 'Удалить выбранные',
+      action: (ids, canvas) => {
+        if (!Array.isArray(ids)) {
+          ids = [ids];
+        }
+        ids.forEach((id) => {
+          const obj = canvas.getObjects().find((o) => o.id === id);
+          if (obj) {
+            canvas.remove(obj);
+            canvas.renderAll();
+            canvas.discardActiveObject();
+          }
+        });
+      },
+      closeOnClick: true,
     },
   ]),
 };
